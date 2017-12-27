@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>轮播图</title>
+	<style>
+		*{margin: 0;padding: 0;}
+		#box{width: 500px;height: 333px;margin: 20px auto;border: 4px solid limegreen;overflow: hidden;}
+		#picbox{height: 333px;font-size: 0;width: 2500px;}
+		img{height: 333px;width: 500px;float: left;}
+		#box1{width: 500px;height: 333px;margin: 20px auto;border: 4px solid skyblue;overflow: hidden;}
+		#picbox1{height: 333px;font-size: 0;width: 2500px;}
+	</style>
+</head>
+<body>
+	<div id="box">
+		<div id="picbox" style="margin-left: 0;">
+			<img src="img/1.jpg" alt="">
+			<img src="img/2.jpg" alt="">
+			<img src="img/3.jpg" alt="">
+			<img src="img/4.jpg" alt="">
+			<img src="img/5.jpg" alt="">
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+
+	function silder(a,b,c){
+		this.box=document.getElementById(a);
+		this.pic=document.getElementById(b);
+		this.imgs=this.pic.getElementsByTagName('img');
+		this.len=this.imgs.length;
+		this.speed=c;
+		this.timer=null;
+		this.init();
+	}
+
+	silder.prototype.init=function(){
+		this.clone();
+		this.move();
+	}
+	silder.prototype.clone=function(){
+		for(var i=0;i<this.len;i++){
+			this.pic.appendChild(this.imgs[i].cloneNode());
+		}
+		this.imgm=this.imgs.length;
+		this.imgw=this.imgs[0].offsetWidth;
+		this.pic.style.width=this.imgm*this.imgw+'px';
+	}
+	silder.prototype.move=function(){
+		this.imger=(this.imgm*this.imgw)/2;
+		var a=this;
+		this.timer=setInterval(function(){
+			if(parseInt(a.pic.style.marginLeft)>-a.imger){
+				a.pic.style.marginLeft=parseInt(a.pic.style.marginLeft)-1+'px';
+			}else{
+				a.pic.style.marginLeft=0+'px';
+		}
+		},this.speed)
+	}
+	function Stopsilder(){
+		silder.apply(this,arguments);
+		this.mouse();
+	}
+	Stopsilder.prototype=Object.create(silder.prototype);
+	Stopsilder.prototype.constructor=Stopsilder;
+
+	Stopsilder.prototype.mouse=function(){
+		var that=this;
+		this.box.onmouseover=function(){
+			clearInterval(that.timer);
+		}
+		this.box.onmouseout=function(){
+			that.move();
+		}
+	}
+	new Stopsilder('box','picbox',15);
+</script>
+</html>
